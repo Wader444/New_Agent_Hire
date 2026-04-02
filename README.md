@@ -1,53 +1,45 @@
-# AgentHire
-# 🚀 AgentHire
+# 🚀 AgentHire – AI Freelance Hiring Platform
 
-AI-powered freelancer hiring platform with Algorand blockchain payments.
+![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
+![Backend](https://img.shields.io/badge/Backend-FastAPI-green)
+![Blockchain](https://img.shields.io/badge/Blockchain-Algorand-blue)
+![License](https://img.shields.io/badge/License-MIT-purple)
 
 ---
 
 ## 🎯 Project Overview
 
-AgentHire allows clients to:
-
-1. Post a project
-2. Get AI-based freelancer recommendations
-3. Hire freelancers
-4. Secure payment using Algorand blockchain
+AgentHire is an AI-powered platform that helps clients find the best freelancer and securely pay them using blockchain.
 
 ---
 
-## 🧠 Core Feature (MVP)
+## ✨ Features
 
-👉 AI Freelancer Selection + Blockchain Payment
+* 🤖 AI-based freelancer recommendation
+* ⚡ Fast backend using FastAPI
+* ⛓ Secure payments via Algorand blockchain
+* 🔗 End-to-end hiring flow
 
-Flow:
+---
 
-Client → AI recommends → Hire → Payment locked → Transaction ID generated
+## 🧠 Core MVP
+
+**AI Freelancer Selection + Blockchain Payment**
+
+```text
+Client → AI Recommendation → Hire → Blockchain Payment → TX ID
+```
 
 ---
 
 ## 🏗 Tech Stack
 
-* **Frontend:** React (in progress)
-* **Backend:** FastAPI (Python)
-* **Blockchain:** Algorand (Testnet)
-* **AI Logic:** Rule-based scoring (skills + rating + experience)
-
----
-
-## 📡 Backend Setup
-
-### Run Backend
-
-```bash
-cd backend
-uvicorn main:app --reload
-```
-
-Server runs at:
-http://127.0.0.1:8000
-
-````
+| Layer      | Technology          |
+| ---------- | ------------------- |
+| Frontend   | React (in progress) |
+| Backend    | FastAPI (Python)    |
+| Blockchain | Algorand (Testnet)  |
+| AI Logic   | Rule-based scoring  |
 
 ---
 
@@ -55,16 +47,13 @@ http://127.0.0.1:8000
 
 ### 🔹 POST /recommend
 
-Get best freelancer based on project description
-
-**Request:**
 ```json
 {
   "description": "Need React developer"
 }
-````
+```
 
-**Response:**
+Response:
 
 ```json
 {
@@ -79,17 +68,13 @@ Get best freelancer based on project description
 
 ### 🔹 POST /hire
 
-Hire freelancer and initiate payment
-
-**Request:**
-
 ```json
 {
   "freelancer": "John"
 }
 ```
 
-**Response:**
+Response:
 
 ```json
 {
@@ -102,7 +87,7 @@ Hire freelancer and initiate payment
 
 ## 🧩 Project Structure
 
-```
+```bash
 AgentHire/
 ├── frontend/
 ├── backend/
@@ -113,43 +98,49 @@ AgentHire/
 
 ---
 
-## 🔗 Integration Flow
+## 🔗 System Flow
 
-Frontend → Backend → AI → Blockchain → Transaction ID → UI
+```text
+Frontend → Backend → AI Logic → Blockchain → Transaction ID → UI
+```
 
 ---
 
 ## ⚠️ Current Status
 
-* ✅ Backend APIs completed
+* ✅ Backend completed
 * 🔄 Frontend integration in progress
 * 🔄 Blockchain integration in progress
 
 ---
 
-## 🏆 Demo Flow (For Judges)
+## 🎬 Demo Flow (For Judges)
 
-1. User enters project
-2. AI recommends freelancer
-3. User clicks hire
-4. Payment processed via blockchain
+1. Enter project description
+2. AI recommends best freelancer
+3. Click "Hire"
+4. Blockchain transaction executed
 5. Transaction ID displayed
 
 ---
 
 ## 👥 Team Roles
 
-* Frontend: UI + API integration
-* Backend: AI logic + APIs
-* Blockchain: Algorand payment
+* 🎨 Frontend: UI & API integration
+* 🧠 Backend: AI logic & APIs
+* ⛓ Blockchain: Payment & smart contract
 
 ---
 
 ## 🔥 Future Improvements
 
-* Real AI model (LLM-based matching)
-* Smart contract escrow release
-* Freelancer profiles database
-* User authentication
+* 🤖 LLM-based AI matching
+* 🔐 Secure escrow release system
+* 🗄 Freelancer database
+* 🔑 Authentication system
 
 ---
+
+## ⭐ Support
+
+If you like this project, consider giving it a star ⭐
