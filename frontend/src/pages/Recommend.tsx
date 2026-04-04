@@ -19,7 +19,7 @@ export default function Recommend() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isHiring, setIsHiring] = useState(false);
-  const [txId, setTxId] = useState<string | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<any>(null);
 
   const handleRecommend = async () => {
     if (!description.trim()) {
@@ -30,7 +30,7 @@ export default function Recommend() {
     setIsLoading(true);
     setError(null);
     setRecommended(null);
-    setTxId(null);
+    setPaymentInfo(null);
     
     try {
       const response = await fetch("http://127.0.0.1:8000/recommend", {
@@ -65,12 +65,13 @@ export default function Recommend() {
         body: JSON.stringify({ freelancer: recommended.recommended_freelancer }),
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to hire freelancer");
+      const data = await response.json();
+      
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Failed to hire freelancer");
       }
       
-      const data = await response.json();
-      setTxId(data.tx_id);
+      setPaymentInfo(data.payment);
     } catch (err: any) {
       setError(err.message || "An error occurred during hiring");
     } finally {
@@ -181,16 +182,24 @@ export default function Recommend() {
             ))}
           </div>
 
-          {txId ? (
+          {paymentInfo ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-green-500/10 text-green-500 border border-green-500/20 rounded-md p-4 flex items-center gap-3"
+              className="bg-green-500/10 text-green-500 border border-green-500/20 rounded-md p-4 flex items-start gap-3"
             >
-              <CheckCircle2 className="h-5 w-5" />
-              <div>
-                <p className="font-medium text-sm">Successfully Hired!</p>
-                <p className="text-xs opacity-80 font-mono mt-1">TX: {txId}</p>
+              <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
+              <div className="w-full">
+                <p className="font-medium text-sm">Successfully Hired & Paid!</p>
+                <div className="text-xs opacity-90 mt-2 space-y-1">
+                  <p className="font-mono break-all">TX: {paymentInfo.tx_id}</p>
+                  <p>Amount: {paymentInfo.amount_algo} ALGO</p>
+                  {paymentInfo.explorer && (
+                    <a href={paymentInfo.explorer} target="_blank" rel="noreferrer" className="underline hover:text-green-400 mt-1 inline-block">
+                      View on Explorer
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           ) : (
