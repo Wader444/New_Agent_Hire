@@ -31,6 +31,7 @@ Client → AI Recommendation → Hire → Blockchain Payment → TX ID
 ```
 
 ---
+deployment fix
 
 ## 🏗 Tech Stack
 
