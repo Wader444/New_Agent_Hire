@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { BASE_URL } from "@/config";
 
 interface RecommendationResponse {
   recommended_freelancer: string;
@@ -33,7 +34,7 @@ export default function Recommend() {
     setPaymentInfo(null);
     
     try {
-      const response = await fetch("http://127.0.0.1:8000/recommend", {
+      const response = await fetch(`${BASE_URL}/recommend`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ description }),
@@ -59,7 +60,7 @@ export default function Recommend() {
     setError(null);
     
     try {
-      const response = await fetch("http://127.0.0.1:8000/hire", {
+      const response = await fetch(`${BASE_URL}/hire`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ freelancer: recommended.recommended_freelancer }),
