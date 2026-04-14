@@ -1,9 +1,25 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import os
+from dotenv import load_dotenv
+from pydantic import BaseModel
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = FastAPI(title="AgentHire API", version="2.0.0")
+
+
+# ─── Request Models ─────────────────────────────────────
+class PaymentRequest(BaseModel):
+    receiver: str
+    amount: int = 200000
+
+
+class HireRequest(BaseModel):
+    freelancer: str
+    amount: int = 200000
 
 # ─── CORS ───────────────────────────────────────────────
 app.add_middleware(
@@ -116,21 +132,12 @@ def recommend(data: dict):
 
 # ─── HIRE: Real Blockchain Payment ──────────────────────
 @app.post("/hire")
-async def hire(data: dict):
+async def hire(request: HireRequest):
     """
     Hire a freelancer and pay them via Algorand blockchain.
-
-    Expected body:
-    {
-        "freelancer": "John",
-        "amount": 200000     # optional, defaults to 0.2 ALGO
-    }
     """
-    if "freelancer" not in data:
-        return {"error": "freelancer name required"}
-
-    freelancer_name = data["freelancer"]
-    amount = data.get("amount", 200000)  # Default 0.2 ALGO in microAlgos
+    freelancer_name = request.freelancer
+    amount = request.amount
 
     # Find the freelancer
     freelancer = next((f for f in freelancers if f["name"] == freelancer_name), None)
@@ -195,6 +202,76 @@ async def hire(data: dict):
         return {"error": "Blockchain payment timed out. Please try again."}
     except Exception as e:
         return {"error": f"Payment error: {str(e)}"}
+
+
+# ─── Direct Payment API (for frontend integration) ──────
+@app.post("/api/pay")
+async def api_pay(request: PaymentRequest):
+    """
+    Direct payment endpoint for frontend integration.
+    
+    Returns:
+    {
+        "txId": "transaction_id",
+        "status": "success" | "error",
+        "amountAlgo": "0.20",
+        "explorer": "https://..."
+    }
+    """
+    try:
+        receiver = request.receiver.strip()
+        amount = request.amount
+        
+        # Validate inputs
+        if not receiver:
+            return {
+                "status": "error",
+                "error": "Receiver address is required",
+                "txId": None
+            }
+        
+        # Call blockchain payment service
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            pay_resp = await client.post(
+                f"{BLOCKCHAIN_URL}/api/payment/send",
+                json={
+                    "receiver": receiver,
+                    "amount": amount,
+                },
+            )
+            
+            if pay_resp.status_code == 200:
+                pay_data = pay_resp.json()
+                return {
+                    "status": "success",
+                    "txId": pay_data.get("txId"),
+                    "confirmedRound": pay_data.get("confirmedRound"),
+                    "amount": pay_data.get("amount"),
+                    "amountAlgo": pay_data.get("amountAlgo"),
+                    "explorer": pay_data.get("explorer"),
+                    "error": None
+                }
+            else:
+                error_data = pay_resp.json()
+                return {
+                    "status": "error",
+                    "error": error_data.get("error", "Payment failed"),
+                    "suggestion": error_data.get("suggestion"),
+                    "txId": None
+                }
+                
+    except httpx.TimeoutException:
+        return {
+            "status": "error",
+            "error": "Payment request timed out",
+            "txId": None
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "txId": None
+        }
 
 
 # ─── Get blockchain account info ────────────────────────
