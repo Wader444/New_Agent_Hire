@@ -26,8 +26,22 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginFormData) {
     await new Promise((res) => setTimeout(res, 800));
+
+    if (data.password !== "password123") {
+      toast.error("Invalid credentials", { description: "For testing, please use 'password123'." });
+      return;
+    }
+
     login(data.email, `token-${Date.now()}`);
     toast.success("Welcome back!", { description: "You've been signed in." });
+    navigate({ to: onboardingComplete ? "/dashboard" : "/onboarding" });
+  }
+
+  async function onGoogleLogin() {
+    toast.loading("Redirecting to Google...", { id: "google" });
+    await new Promise((res) => setTimeout(res, 1000));
+    toast.success("Signed in with Google", { id: "google" });
+    login("google-user@gmail.com", `token-${Date.now()}`);
     navigate({ to: onboardingComplete ? "/dashboard" : "/onboarding" });
   }
 
@@ -42,26 +56,16 @@ export default function LoginPage() {
         transition={{ duration: 0.35, ease: "easeOut" }}
         className="space-y-5"
       >
-        {/* Google button — disabled with tooltip */}
-        <div className="relative group">
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            data-ocid="login-google-btn"
-            className="w-full flex items-center justify-center gap-3 border border-border rounded-lg py-2.5 px-4 text-sm font-medium text-muted-foreground bg-card cursor-not-allowed opacity-60 transition-smooth select-none"
-          >
-            <FcGoogle className="h-5 w-5 flex-shrink-0" />
-            Continue with Google
-          </button>
-          {/* Tooltip */}
-          <span
-            role="tooltip"
-            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap bg-foreground text-background text-xs px-2.5 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-smooth pointer-events-none z-10 shadow-md"
-          >
-            Coming soon
-          </span>
-        </div>
+        {/* Google button */}
+        <button
+          type="button"
+          onClick={onGoogleLogin}
+          data-ocid="login-google-btn"
+          className="w-full flex items-center justify-center gap-3 border border-border hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-2.5 px-4 text-sm font-medium text-foreground bg-card transition-smooth select-none"
+        >
+          <FcGoogle className="h-5 w-5 flex-shrink-0" />
+          Continue with Google
+        </button>
 
         {/* OR divider */}
         <div className="flex items-center gap-3">
@@ -111,13 +115,13 @@ export default function LoginPage() {
               })}
             />
             <div className="flex justify-end">
-              <button
-                type="button"
+              <Link
+                to="/forgot-password"
                 data-ocid="forgot-password-link"
                 className="text-xs text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded transition-smooth"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
           </div>
 

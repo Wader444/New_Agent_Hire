@@ -19,6 +19,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import PostProjectPage from "@/pages/PostProjectPage";
 import FreelancersPage from "@/pages/FreelancersPage";
 import ProfilePage from "@/pages/ProfilePage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import PaymentSuccessPage from "@/pages/PaymentSuccessPage";
 
 // Root route
@@ -58,6 +59,13 @@ const loginRoute = createRoute({
   path: "/login",
   beforeLoad: requireGuest,
   component: LoginPage,
+});
+
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/forgot-password",
+  beforeLoad: requireGuest,
+  component: ForgotPasswordPage,
 });
 
 const signupRoute = createRoute({
@@ -112,6 +120,7 @@ const paymentSuccessRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
+  forgotPasswordRoute,
   signupRoute,
   onboardingRoute,
   dashboardRoute,
