@@ -37,6 +37,31 @@ export default function SignupPage() {
     navigate({ to: "/onboarding" });
   }
 
+  async function onGoogleSignup() {
+    try {
+      toast.loading("Redirecting to Google...", { id: "google" });
+      const { signInWithGoogle } = await import("@/lib/firebase");
+      const user = await signInWithGoogle();
+      toast.success("Account created with Google!", { id: "google" });
+      login(user.email || "google-user@gmail.com", `google-token-${user.uid}`);
+      navigate({ to: "/onboarding" });
+    } catch (error: any) {
+      if (error.message === "FIREBASE_NOT_CONFIGURED") {
+        toast.dismiss("google");
+        toast.error("Firebase not configured", { 
+          description: "Please add your VITE_FIREBASE config to .env to enable real Google Login.",
+          duration: 6000
+        });
+        // Fallback to mock login so the user experiences the flow locally while keys are missing
+        await new Promise((res) => setTimeout(res, 800));
+        login("google-user@gmail.com", `token-${Date.now()}`);
+        navigate({ to: "/onboarding" });
+      } else {
+        toast.error("Google sign up failed", { id: "google", description: error.message });
+      }
+    }
+  }
+
   return (
     <AuthLayout
       title="Create your account"
@@ -48,26 +73,16 @@ export default function SignupPage() {
         transition={{ duration: 0.35, ease: "easeOut" }}
         className="space-y-5"
       >
-        {/* Google button — disabled with tooltip */}
-        <div className="relative group">
-          <button
-            type="button"
-            disabled
-            aria-disabled="true"
-            data-ocid="signup-google-btn"
-            className="w-full flex items-center justify-center gap-3 border border-border rounded-lg py-2.5 px-4 text-sm font-medium text-muted-foreground bg-card cursor-not-allowed opacity-60 transition-smooth select-none"
-          >
-            <FcGoogle className="h-5 w-5 flex-shrink-0" />
-            Continue with Google
-          </button>
-          {/* Tooltip */}
-          <span
-            role="tooltip"
-            className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap bg-foreground text-background text-xs px-2.5 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-smooth pointer-events-none z-10 shadow-md"
-          >
-            Coming soon
-          </span>
-        </div>
+        {/* Google button */}
+        <button
+          type="button"
+          onClick={onGoogleSignup}
+          data-ocid="signup-google-btn"
+          className="w-full flex items-center justify-center gap-3 border border-border hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring rounded-lg py-2.5 px-4 text-sm font-medium text-foreground bg-card transition-smooth select-none"
+        >
+          <FcGoogle className="h-5 w-5 flex-shrink-0" />
+          Continue with Google
+        </button>
 
         {/* OR divider */}
         <div className="flex items-center gap-3">

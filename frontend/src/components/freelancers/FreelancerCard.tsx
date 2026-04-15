@@ -184,13 +184,14 @@ export function FreelancerCard({
           </div>
         </CardBody>
 
-        {/* Footer */}
-        <div className="px-5 pb-5 pt-0 flex items-center justify-between gap-3 border-t border-border mt-auto pt-4">
-          <div>
-            <span className="text-lg font-bold text-foreground">
+        <div className="px-5 pb-5 flex items-center justify-between gap-3 border-t border-border mt-auto pt-4">
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-foreground leading-none">
               ${freelancer.hourlyRate}
             </span>
-            <span className="text-xs text-muted-foreground">/hr</span>
+            <span className="text-[10px] text-muted-foreground mt-1 max-w-[160px] leading-tight">
+              / project may increase or decrease based on the project
+            </span>
           </div>
           <Button
             variant={isAI ? "default" : "outline"}

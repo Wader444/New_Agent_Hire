@@ -120,14 +120,16 @@ export function HireModal({ freelancer, onClose }: HireModalProps) {
                   )}
                 </div>
 
-                <div className="mt-3 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Hourly rate</span>
-                  <span className="font-bold text-foreground">
-                    ${freelancer.hourlyRate}
-                    <span className="text-xs font-normal text-muted-foreground">
-                      /hr
+                <div className="mt-3 flex items-start justify-between text-sm">
+                  <span className="text-muted-foreground mt-0.5">Project rate</span>
+                  <div className="flex flex-col items-end text-right ml-4">
+                    <span className="font-bold text-foreground text-base">
+                      ${freelancer.hourlyRate}
                     </span>
-                  </span>
+                    <span className="text-[10px] font-normal text-muted-foreground leading-tight mt-0.5">
+                      / project may increase or decrease based on the project
+                    </span>
+                  </div>
                 </div>
                 <div className="mt-1.5 flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Experience</span>

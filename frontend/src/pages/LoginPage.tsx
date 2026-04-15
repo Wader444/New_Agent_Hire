@@ -38,11 +38,28 @@ export default function LoginPage() {
   }
 
   async function onGoogleLogin() {
-    toast.loading("Redirecting to Google...", { id: "google" });
-    await new Promise((res) => setTimeout(res, 1000));
-    toast.success("Signed in with Google", { id: "google" });
-    login("google-user@gmail.com", `token-${Date.now()}`);
-    navigate({ to: onboardingComplete ? "/dashboard" : "/onboarding" });
+    try {
+      toast.loading("Redirecting to Google...", { id: "google" });
+      const { signInWithGoogle } = await import("@/lib/firebase");
+      const user = await signInWithGoogle();
+      toast.success("Signed in with Google", { id: "google" });
+      login(user.email || "google-user@gmail.com", `google-token-${user.uid}`);
+      navigate({ to: onboardingComplete ? "/dashboard" : "/onboarding" });
+    } catch (error: any) {
+      if (error.message === "FIREBASE_NOT_CONFIGURED") {
+        toast.dismiss("google");
+        toast.error("Firebase not configured", { 
+          description: "Please add your VITE_FIREBASE config to .env to enable real Google Login.",
+          duration: 6000
+        });
+        // Fallback to mock login so the user experiences the flow locally while keys are missing
+        await new Promise((res) => setTimeout(res, 800));
+        login("google-user@gmail.com", `token-${Date.now()}`);
+        navigate({ to: onboardingComplete ? "/dashboard" : "/onboarding" });
+      } else {
+        toast.error("Google sign in failed", { id: "google", description: error.message });
+      }
+    }
   }
 
   return (

@@ -149,15 +149,17 @@ export default function PostProjectPage() {
                   Budget (USD)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <span className="absolute left-3 top-1/2 -translate-y-[45%] text-sm font-medium text-muted-foreground pointer-events-none">
+                    $
+                  </span>
                   <input
                     id="budget"
                     type="number"
-                    placeholder="e.g. 2500"
+                    placeholder="2500"
                     min={10}
                     step="1"
                     className={cn(
-                      "input-base w-full text-sm pl-8",
+                      "input-base w-full text-sm pl-7",
                       errors.budget &&
                         "border-destructive focus:ring-destructive",
                     )}
