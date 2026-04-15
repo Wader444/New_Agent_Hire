@@ -138,13 +138,8 @@ export default function SignupPage() {
             autoComplete="new-password"
             data-ocid="signup-password"
             error={errors.password?.message}
-            hint={!errors.password ? "Minimum 8 characters" : undefined}
             {...register("password", {
               required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters",
-              },
             })}
           />
 
