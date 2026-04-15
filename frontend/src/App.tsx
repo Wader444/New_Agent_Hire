@@ -1,4 +1,3 @@
-import { PageLoader } from "@/components/base/LoadingSpinner";
 import { useAuthStore } from "@/store/authStore";
 import {
   Outlet,
@@ -9,19 +8,18 @@ import {
   redirect,
 } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
-import { Suspense, lazy } from "react";
 import { Toaster } from "sonner";
 
-// Lazy-loaded pages
-const LandingPage = lazy(() => import("@/pages/LandingPage"));
-const LoginPage = lazy(() => import("@/pages/LoginPage"));
-const SignupPage = lazy(() => import("@/pages/SignupPage"));
-const OnboardingPage = lazy(() => import("@/pages/OnboardingPage"));
-const DashboardPage = lazy(() => import("@/pages/DashboardPage"));
-const PostProjectPage = lazy(() => import("@/pages/PostProjectPage"));
-const FreelancersPage = lazy(() => import("@/pages/FreelancersPage"));
-const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
-const PaymentSuccessPage = lazy(() => import("@/pages/PaymentSuccessPage"));
+// Direct imports for fast navigation
+import LandingPage from "@/pages/LandingPage";
+import LoginPage from "@/pages/LoginPage";
+import SignupPage from "@/pages/SignupPage";
+import OnboardingPage from "@/pages/OnboardingPage";
+import DashboardPage from "@/pages/DashboardPage";
+import PostProjectPage from "@/pages/PostProjectPage";
+import FreelancersPage from "@/pages/FreelancersPage";
+import ProfilePage from "@/pages/ProfilePage";
+import PaymentSuccessPage from "@/pages/PaymentSuccessPage";
 
 // Root route
 const rootRoute = createRootRoute({
@@ -32,9 +30,7 @@ const rootRoute = createRootRoute({
       forcedTheme="light"
       storageKey="agenthire-theme"
     >
-      <Suspense fallback={<PageLoader />}>
-        <Outlet />
-      </Suspense>
+      <Outlet />
       <Toaster richColors position="top-right" />
     </ThemeProvider>
   ),

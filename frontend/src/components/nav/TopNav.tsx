@@ -1,15 +1,22 @@
 import { Avatar } from "@/components/base/Avatar";
 import { useAuthStore } from "@/store/authStore";
+import { useSidebar } from "@/components/ui/sidebar";
 import { Menu } from "lucide-react";
 
 interface TopNavProps {
-  onMenuClick: () => void;
+  onMenuClick?: () => void;
   title?: string;
 }
 
 export function TopNav({ onMenuClick, title }: TopNavProps) {
   const email = useAuthStore((s) => s.email);
   const initials = email ? email.slice(0, 2).toUpperCase() : "U";
+  const { toggleSidebar } = useSidebar();
+
+  const handleMenuClick = () => {
+    if (onMenuClick) onMenuClick();
+    toggleSidebar();
+  };
 
   return (
     <header className="h-16 border-b border-border bg-card flex items-center px-4 md:px-6 gap-4 shrink-0">
@@ -17,7 +24,7 @@ export function TopNav({ onMenuClick, title }: TopNavProps) {
       <button
         type="button"
         data-ocid="topnav-menu"
-        onClick={onMenuClick}
+        onClick={handleMenuClick}
         className="lg:hidden p-2 rounded-lg text-foreground/70 hover:bg-muted hover:text-foreground transition-smooth"
         aria-label="Open menu"
       >
